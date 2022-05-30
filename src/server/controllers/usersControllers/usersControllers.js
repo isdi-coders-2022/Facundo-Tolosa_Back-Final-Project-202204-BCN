@@ -1,5 +1,7 @@
 const debug = require("debug")("amazingSM:server:controllers:userControllers");
 const chalk = require("chalk");
+const bcrypt = require("bcrypt");
+const jsonwebtoken = require("jsonwebtoken");
 const User = require("../../../database/models/User");
 const encryptPassword = require("../../../utils/encryptPassword");
 
@@ -44,4 +46,42 @@ const userRegister = async (req, res, next) => {
   }
 };
 
-module.exports = { userRegister };
+const userLogin = async (req, res, next) => {
+  const { username, password } = req.body;
+
+  const user = await User.findOne({ username });
+
+  if (!user) {
+    debug(chalk.redBright("Username or password incorrect"));
+    const err = new Error();
+    err.code = 403;
+    err.message = "Username or password incorrect";
+
+    next(err);
+    return;
+  }
+
+  const userData = {
+    id: user.id,
+    name: user.name,
+    username: user.username,
+    image: user.image,
+  };
+
+  const rightPassword = await bcrypt.compare(password, user.password);
+
+  if (!rightPassword) {
+    debug(chalk.redBright("Username or password incorrect"));
+    const err = new Error();
+    err.code = 403;
+    err.message = "Username or password incorrect";
+
+    next(err);
+    return;
+  }
+
+  const token = jsonwebtoken.sign(userData, process.env.JWT_SECRET);
+  res.status(200).json({ token });
+};
+
+module.exports = { userRegister, userLogin };
