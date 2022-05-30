@@ -39,7 +39,7 @@ describe("Given a userRegister function", () => {
   });
 
   describe("When it's invoqued with a request with an user that already exists and a response", () => {
-    test("Then it shoulld call the next received function with an error", async () => {
+    test("Then it should call the received next function with an error", async () => {
       const req = {
         body: {
           name: "",
@@ -55,6 +55,26 @@ describe("Given a userRegister function", () => {
       expectedError.message = "User already exists";
 
       User.findOne = jest.fn().mockResolvedValue(true);
+      await userRegister(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When it's invoqued with a request with an invalid user and a response", () => {
+    test("Then it should call the received next function with an error", async () => {
+      const req = {
+        body: {
+          mane: "",
+        },
+      };
+      const next = jest.fn();
+
+      const expectedError = new Error();
+      expectedError.code = 400;
+      expectedError.message = "Bad request";
+
+      User.findOne = jest.fn().mockResolvedValue(false);
       await userRegister(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
