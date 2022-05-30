@@ -1,10 +1,12 @@
+const bcrypt = require("bcrypt");
+const jsonwebtoken = require("jsonwebtoken");
 const User = require("../../../database/models/User");
 const { userMock } = require("../../../mocks/usersMocks");
-const { userRegister } = require("./usersControllers");
+const { userRegister, userLogin } = require("./usersControllers");
 
 describe("Given a userRegister function", () => {
   describe("When it's invoqued with a request with an user that doesn't exist and a response", () => {
-    test("Then it shoulld call the response's status method with 201 and the json method with the new user without the password", async () => {
+    test("Then it should call the response's status method with 201 and the json method with the new user without the password", async () => {
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
@@ -76,6 +78,76 @@ describe("Given a userRegister function", () => {
 
       User.findOne = jest.fn().mockResolvedValue(false);
       await userRegister(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a userLogin function", () => {
+  describe("When it's invoqued with a request with an user with the correct credentials", () => {
+    test("Then it should call the response's status method with 200 and the json method with a token", async () => {
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const req = {
+        body: {
+          name: "carlos",
+          username: "carlos",
+        },
+      };
+      const expectedToken = 12345678;
+
+      User.findOne = jest.fn().mockResolvedValue(true);
+      bcrypt.compare = jest.fn().mockResolvedValue(true);
+      jsonwebtoken.sign = jest.fn().mockReturnValue(expectedToken);
+
+      await userLogin(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ token: expectedToken });
+    });
+  });
+
+  describe("When it's invoqued with a request with an user with a username that doesn't exists", () => {
+    test("Then it should call the response's status method with 403 and the json method with the message 'Username or password incorrect'", async () => {
+      const req = {
+        body: {
+          name: "carlos",
+          username: "carlos",
+        },
+      };
+      const next = jest.fn();
+      const expectedError = new Error();
+      expectedError.code = 403;
+      expectedError.message = "Username or password incorrect";
+
+      User.findOne = jest.fn().mockResolvedValue(false);
+
+      await userLogin(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When it's invoqued with a request with an user with a username and a wrong password", () => {
+    test("Then it should call the response's status method with 403 and the json method with the message 'Username or password incorrect'", async () => {
+      const req = {
+        body: {
+          name: "carlos",
+          username: "carlos",
+        },
+      };
+      const next = jest.fn();
+      const expectedError = new Error();
+      expectedError.code = 403;
+      expectedError.message = "Username or password incorrect";
+
+      User.findOne = jest.fn().mockResolvedValue(true);
+      bcrypt.compare = jest.fn().mockResolvedValue(false);
+
+      await userLogin(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
