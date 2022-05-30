@@ -7,12 +7,12 @@ const userRegister = async (req, res, next) => {
   const { name, username, password, image } = req.body;
 
   const user = await User.findOne({ username });
-
   if (user) {
     const err = new Error();
     err.code = 409;
     err.message = "User already exists";
     next(err);
+
     return;
   }
 

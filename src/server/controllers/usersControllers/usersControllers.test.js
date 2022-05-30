@@ -21,12 +21,43 @@ describe("Given a userRegister function", () => {
 
       const next = jest.fn();
 
+      const userCreated = {
+        name: userMock.name,
+        username: userMock.username,
+        image: userMock.image,
+        notes: [],
+      };
+
       User.findOne = jest.fn().mockResolvedValue(false);
-      User.create = jest.fn().mockResolvedValue(req.body);
+      User.create = jest.fn().mockResolvedValue(userCreated);
 
       await userRegister(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(userCreated);
+    });
+  });
+
+  describe("When it's invoqued with a request with an user that already exists and a response", () => {
+    test("Then it shoulld call the next received function with an error", async () => {
+      const req = {
+        body: {
+          name: "",
+          username: "",
+          password: "",
+          image: "",
+        },
+      };
+      const next = jest.fn();
+
+      const expectedError = new Error();
+      expectedError.code = 409;
+      expectedError.message = "User already exists";
+
+      User.findOne = jest.fn().mockResolvedValue(true);
+      await userRegister(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
