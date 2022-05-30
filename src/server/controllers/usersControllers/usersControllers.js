@@ -1,7 +1,7 @@
 const debug = require("debug")("amazingSM:server:controllers:userControllers");
 const chalk = require("chalk");
-const User = require("../../database/models/User");
-const encryptPassword = require("../../utils/encryptPassword");
+const User = require("../../../database/models/User");
+const encryptPassword = require("../../../utils/encryptPassword");
 
 const userRegister = async (req, res, next) => {
   const { name, username, password, image } = req.body;
@@ -28,7 +28,15 @@ const userRegister = async (req, res, next) => {
 
     debug(chalk.greenBright("User created"));
 
-    res.status(201).json(newUser);
+    const newUserWithoutPassword = {
+      username: newUser.username,
+      name: newUser.name,
+      image: newUser.image,
+      notes: newUser.notes,
+      id: newUser.id,
+    };
+
+    res.status(201).json(newUserWithoutPassword);
   } catch (err) {
     err.code = 400;
     err.message = "Bad request";

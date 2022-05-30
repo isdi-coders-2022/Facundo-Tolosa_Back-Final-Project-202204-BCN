@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(helmet());
 
-app.use("/users", usersRouter);
+app.use("/user", usersRouter);
 
 app.use(notFoundError);
 app.use(generalError);
