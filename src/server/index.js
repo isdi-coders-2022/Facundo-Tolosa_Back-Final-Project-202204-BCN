@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-const usersRouter = require("./routers/usersRouter");
+const usersRouter = require("./routers/usersRouter/usersRouter");
 const { notFoundError, generalError } = require("./middlewares/errors/errors");
 
 const app = express();
