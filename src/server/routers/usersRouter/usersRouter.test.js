@@ -2,7 +2,11 @@ const request = require("supertest");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { default: mongoose } = require("mongoose");
 const app = require("../..");
-const { usersMock, userMock } = require("../../../mocks/usersMocks");
+const {
+  usersMock,
+  userMock,
+  userMockCredentials,
+} = require("../../../mocks/usersMocks");
 const connectDB = require("../../../database");
 const User = require("../../../database/models/User");
 
@@ -19,8 +23,8 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await User.create(usersMock[0]);
-  await User.create(usersMock[1]);
+  await request(app).post("/user/register").send(usersMock[0]).expect(201);
+  await request(app).post("/user/register").send(usersMock[1]).expect(201);
 });
 
 afterEach(async () => {
@@ -61,6 +65,52 @@ describe("Given a POST /user/register endpoint", () => {
         .post("/user/register")
         .send(invalidUser)
         .expect(400);
+
+      expect(body).toEqual(expectedMessage);
+    });
+  });
+});
+
+describe("Given a POST /user/login endpoint", () => {
+  describe("When it receives a request with a registered user", () => {
+    test("Then it should respond with a 200 status and a token", async () => {
+      await request(app).post("/user/register").send(userMock).expect(201);
+
+      const { token } = await request(app)
+        .post("/user/login")
+        .send(userMockCredentials)
+        .expect(200);
+
+      expect(token).not.toBeNull();
+    });
+  });
+
+  describe("When it receives a request with a unregistered user", () => {
+    test("Then it should respond with a 403 status and the message 'Username or password incorrect'", async () => {
+      const expectedMessage = { message: "Username or password incorrect" };
+      const unregisteredUser = { username: "pepito40", password: "" };
+
+      const { body } = await request(app)
+        .post("/user/login")
+        .send(unregisteredUser)
+        .expect(403);
+
+      expect(body).toEqual(expectedMessage);
+    });
+  });
+
+  describe("When it receives a request with a registered user and a wrong password", () => {
+    test("Then it should respond with a 403 status and the message 'Username or password incorrect'", async () => {
+      const expectedMessage = { message: "Username or password incorrect" };
+      const wrongPasswordUser = {
+        username: usersMock[0].username,
+        password: "asd",
+      };
+
+      const { body } = await request(app)
+        .post("/user/login")
+        .send(wrongPasswordUser)
+        .expect(403);
 
       expect(body).toEqual(expectedMessage);
     });

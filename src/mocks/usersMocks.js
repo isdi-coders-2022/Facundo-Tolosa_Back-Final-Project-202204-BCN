@@ -1,3 +1,8 @@
+const userMockCredentials = {
+  username: "roberto",
+  password: "roberto",
+};
+
 const userMock = {
   username: "roberto",
   password: "roberto",
@@ -23,4 +28,5 @@ const usersMock = [
 module.exports = {
   userMock,
   usersMock,
+  userMockCredentials,
 };
