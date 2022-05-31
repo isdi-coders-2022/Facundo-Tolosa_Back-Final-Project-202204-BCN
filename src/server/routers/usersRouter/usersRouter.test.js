@@ -33,7 +33,7 @@ afterEach(async () => {
 
 describe("Given a POST /user/register endpoint", () => {
   describe("When it receives a request with a non registered user", () => {
-    test("Then it should respond with a 201 statuss and the new user created", async () => {
+    test("Then it should respond with a 201 status and the new user created", async () => {
       const { body } = await request(app)
         .post("/user/register")
         .send(userMock)
