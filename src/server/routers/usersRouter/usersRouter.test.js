@@ -86,14 +86,14 @@ describe("Given a POST /user/login endpoint", () => {
   });
 
   describe("When it receives a request with a unregistered user", () => {
-    test("Then it should respond with a 403 status and the message 'Username or password incorrect'", async () => {
-      const expectedMessage = { message: "Username or password incorrect" };
+    test("Then it should respond with a 400 status and the message 'Bad request'", async () => {
+      const expectedMessage = { message: "Validation error" };
       const unregisteredUser = { username: "pepito40", password: "" };
 
       const { body } = await request(app)
         .post("/user/login")
         .send(unregisteredUser)
-        .expect(403);
+        .expect(400);
 
       expect(body).toEqual(expectedMessage);
     });
