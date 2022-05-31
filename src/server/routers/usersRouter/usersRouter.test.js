@@ -58,7 +58,7 @@ describe("Given a POST /user/register endpoint", () => {
 
   describe("When it receives a request with a invalid user", () => {
     test("Then it should respond with a 400 status and the message 'Bad request'", async () => {
-      const expectedMessage = { message: "Bad request" };
+      const expectedMessage = { message: "Validation error" };
       const invalidUser = { mane: "Carlos" };
 
       const { body } = await request(app)

@@ -44,7 +44,7 @@ describe("Given a generalError function", () => {
       const next = {};
       const err = {};
       const expectedCode = 500;
-      const expectedMessage = { message: "General pete" };
+      const expectedMessage = { message: "Internal server error" };
 
       generalError(err, null, res, next);
 
