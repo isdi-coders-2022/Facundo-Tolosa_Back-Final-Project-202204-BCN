@@ -1,4 +1,4 @@
-const debug = require("debug")("amazingSM:server:controllers:userControllers");
+const debug = require("debug")("amazingN:server:controllers:userControllers");
 const chalk = require("chalk");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
@@ -50,7 +50,6 @@ const userLogin = async (req, res, next) => {
   const { username, password } = req.body;
 
   const user = await User.findOne({ username });
-
   if (!user) {
     debug(chalk.redBright("Username or password incorrect"));
     const err = new Error();
