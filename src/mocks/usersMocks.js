@@ -7,7 +7,7 @@ const userMock = {
   username: "roberto",
   password: "roberto",
   name: "roberto",
-  image: "",
+  image: "image",
 };
 
 const usersMock = [
@@ -15,13 +15,13 @@ const usersMock = [
     username: "carlos",
     password: "carlos",
     name: "carlos",
-    image: "",
+    image: "image",
   },
   {
     username: "ernesto",
     password: "ernesto",
     name: "ernesto",
-    image: "ernesto",
+    image: "image",
   },
 ];
 

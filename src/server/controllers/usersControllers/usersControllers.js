@@ -20,7 +20,7 @@ const userRegister = async (req, res, next) => {
 
   try {
     const encryptedPassword = await encryptPassword(password);
-
+    debugger;
     const newUser = await User.create({
       username,
       password: encryptedPassword,
@@ -40,6 +40,7 @@ const userRegister = async (req, res, next) => {
 
     res.status(201).json(newUserWithoutPassword);
   } catch (err) {
+    debugger;
     err.code = 400;
     err.message = "Bad request";
     next(err);
