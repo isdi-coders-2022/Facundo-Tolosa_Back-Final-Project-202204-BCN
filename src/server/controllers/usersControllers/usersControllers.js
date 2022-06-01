@@ -50,6 +50,8 @@ const userLogin = async (req, res, next) => {
   const { username, password } = req.body;
 
   const user = await User.findOne({ username });
+  debug(chalk.redBright(`${user}`));
+
   if (!user) {
     debug(chalk.redBright("Username or password incorrect"));
     const err = new Error();
