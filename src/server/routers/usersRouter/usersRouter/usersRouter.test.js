@@ -76,12 +76,12 @@ describe("Given a POST /user/login endpoint", () => {
     test("Then it should respond with a 200 status and a token", async () => {
       await request(app).post("/user/register").send(userMock).expect(201);
 
-      const { token } = await request(app)
+      const { body } = await request(app)
         .post("/user/login")
         .send(userMockCredentials)
         .expect(200);
 
-      expect(token).not.toBeNull();
+      expect(body.token).not.toBeNull();
     });
   });
 
