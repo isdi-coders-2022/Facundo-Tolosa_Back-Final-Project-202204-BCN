@@ -12,9 +12,9 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{origin}}/user/register",
+          "raw": "{{origin}}/user/login",
           "host": ["{{origin}}"],
-          "path": ["user", "register"]
+          "path": ["user", "login"]
         }
       },
       "response": []
@@ -31,6 +31,42 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "{{origin}}/notes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{origin}}/notes",
+          "host": ["{{origin}}"],
+          "path": ["notes"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "origin",
+      "value": "http://localhost:3000/",
+      "type": "string"
     }
   ]
 }

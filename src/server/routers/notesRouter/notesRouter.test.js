@@ -66,7 +66,7 @@ describe("Given a GET /notes/ endpoint", () => {
         body: { message },
       } = await request(app)
         .get("/notes")
-        .set("Authorization", `Bearer 1974`)
+        .set("Authorization", `Bearer 1973`)
         .expect(401);
 
       expect(message).toBe(expectedMessage);
