@@ -3,11 +3,11 @@ const { validate } = require("express-validation");
 const {
   credentialsRegisterSchema,
   credentialsLoginSchema,
-} = require("../../../schemas/userCredentialsSchema");
+} = require("../../../../schemas/userCredentialsSchema");
 const {
-  userRegister,
   userLogin,
-} = require("../../controllers/usersControllers/usersControllers");
+  userRegister,
+} = require("../../../controllers/usersControllers/usersControllers");
 
 const usersRouter = express.Router();
 
