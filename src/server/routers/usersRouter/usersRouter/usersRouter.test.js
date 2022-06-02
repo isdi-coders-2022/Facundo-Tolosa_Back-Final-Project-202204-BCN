@@ -1,14 +1,14 @@
 const request = require("supertest");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { default: mongoose } = require("mongoose");
-const app = require("../..");
+const app = require("../../..");
 const {
   usersMock,
   userMock,
   userMockCredentials,
-} = require("../../../mocks/usersMocks");
-const connectDB = require("../../../database");
-const User = require("../../../database/models/User");
+} = require("../../../../mocks/usersMocks");
+const connectDB = require("../../../../database");
+const User = require("../../../../database/models/User");
 
 let mongoServer;
 
