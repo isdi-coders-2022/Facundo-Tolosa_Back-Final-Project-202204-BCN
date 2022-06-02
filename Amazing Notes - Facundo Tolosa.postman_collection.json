@@ -1,36 +1,90 @@
 {
-  "info": {
-    "_postman_id": "f7c19aff-2a39-44bc-bfe8-b008fc5186fa",
-    "name": "Amazing Notes - Facundo Tolosa",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "20646391"
-  },
-  "item": [
-    {
-      "name": "{{origin}}/user/login",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "url": {
-          "raw": "{{origin}}/user/register",
-          "host": ["{{origin}}"],
-          "path": ["user", "register"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "{{origin}}/user/register",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "url": {
-          "raw": "{{origin}}/user/register",
-          "host": ["{{origin}}"],
-          "path": ["user", "register"]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "f7c19aff-2a39-44bc-bfe8-b008fc5186fa",
+		"name": "Amazing Notes - Facundo Tolosa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20646391"
+	},
+	"item": [
+		{
+			"name": "{{origin}}/user/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}/user/login",
+					"host": [
+						"{{origin}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{origin}}/user/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}/user/register",
+					"host": [
+						"{{origin}}"
+					],
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{origin}}/notes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}/notes",
+					"host": [
+						"{{origin}}"
+					],
+					"path": [
+						"notes"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "origin",
+			"value": "http://localhost:3000/",
+			"type": "string"
+		}
+	]
 }
