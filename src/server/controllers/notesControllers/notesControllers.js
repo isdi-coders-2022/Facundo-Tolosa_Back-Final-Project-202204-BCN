@@ -18,6 +18,7 @@ const getNotes = async (req, res, next) => {
 
 const deleteNote = async (req, res, next) => {
   const { idNote } = req.params;
+
   try {
     await Note.findByIdAndDelete(idNote);
 
