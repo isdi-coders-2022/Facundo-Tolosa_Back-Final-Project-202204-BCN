@@ -31,7 +31,7 @@ afterEach(async () => {
 
 describe("Given a GET /notes/ endpoint", () => {
   describe("When it receives a request with a valid token", () => {
-    test("Then it should respond with a 200 status a list of two notes", async () => {
+    test("Then it should respond with a 200 status and a list of two notes", async () => {
       const expectedLength = 2;
 
       const {
@@ -70,6 +70,49 @@ describe("Given a GET /notes/ endpoint", () => {
         .expect(401);
 
       expect(message).toBe(expectedMessage);
+    });
+  });
+});
+
+describe("Given a DELETE /notes/:id endpoint", () => {
+  describe("When it receives a request with a valid token and a id to delete", () => {
+    test("Then it should respond with a 200 status", async () => {
+      const {
+        body: { token },
+      } = await request(app)
+        .post("/user/login")
+        .send({
+          username: usersMock[0].username,
+          password: usersMock[0].password,
+        })
+        .expect(200);
+
+      const { id: idToDelete } = await Note.create(listOfNotesMock[0]);
+      await Note.create(listOfNotesMock[1]);
+
+      await request(app)
+        .delete(`/notes/${idToDelete}`)
+        .set("Authorization", `Bearer ${token}`)
+        .expect(200);
+    });
+  });
+
+  describe("When it receives a request with a valid token and a invalid id to delete", () => {
+    test("Then it should respond with a 404 status", async () => {
+      const {
+        body: { token },
+      } = await request(app)
+        .post("/user/login")
+        .send({
+          username: usersMock[0].username,
+          password: usersMock[0].password,
+        })
+        .expect(200);
+
+      await request(app)
+        .delete(`/notes/1974`)
+        .set("Authorization", `Bearer ${token}`)
+        .expect(404);
     });
   });
 });
