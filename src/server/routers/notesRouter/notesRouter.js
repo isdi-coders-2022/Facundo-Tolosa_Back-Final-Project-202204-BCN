@@ -1,4 +1,6 @@
 const express = require("express");
+const { validate } = require("express-validation");
+const { noteSchema } = require("../../../schemas/notesSchemas");
 const {
   getNotes,
   deleteNote,
@@ -11,6 +13,6 @@ const notesRouter = express.Router();
 notesRouter.get("/", getNotes);
 notesRouter.get("/:username", getUserNotes);
 notesRouter.delete("/:idNote", deleteNote);
-notesRouter.post("/", createNote);
+notesRouter.post("/", validate(noteSchema), createNote);
 
 module.exports = notesRouter;
