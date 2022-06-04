@@ -116,3 +116,41 @@ describe("Given a DELETE /notes/:id endpoint", () => {
     });
   });
 });
+
+describe("Given a POST /notes/ endpoint", () => {
+  describe("When it receives a request with a valid token and note to create", () => {
+    test.only("Then it should respond with a 201 status and the new note created", async () => {
+      const title = "Amazing note";
+      const category = "notes";
+      const content = "content";
+
+      const noteToCreate = {
+        title,
+        category,
+        content,
+      };
+
+      const {
+        body: { token },
+      } = await request(app)
+        .post("/user/login")
+        .send({
+          username: usersMock[0].username,
+          password: usersMock[0].password,
+        })
+        .expect(200);
+
+      const { body: noteCreated } = await request(app)
+        .post(`/notes`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(noteToCreate)
+        .expect(201);
+
+      expect(noteCreated).toHaveProperty("title", title);
+      expect(noteCreated).toHaveProperty("category", category);
+      expect(noteCreated).toHaveProperty("content", content);
+      expect(noteCreated).toHaveProperty("creationDate");
+      expect(noteCreated).toHaveProperty("author", usersMock[0].username);
+    });
+  });
+});
