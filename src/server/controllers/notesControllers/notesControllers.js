@@ -1,6 +1,7 @@
 const debug = require("debug")("amazingN:notesControllers");
 const chalk = require("chalk");
 const Note = require("../../../database/models/Note");
+const User = require("../../../database/models/User");
 
 const getNotes = async (req, res, next) => {
   try {
@@ -33,4 +34,27 @@ const deleteNote = async (req, res, next) => {
   }
 };
 
-module.exports = { getNotes, deleteNote };
+const getUserNotes = async (req, res, next) => {
+  const { username } = req.params;
+
+  try {
+    const { notes } = await User.findOne({ username }).populate(
+      "notes",
+      null,
+      Note
+    );
+
+    res.status(200).json({ notes });
+    debug(chalk.green("Someone asked for the notes of a user"));
+  } catch (err) {
+    debug(
+      chalk.red("Someone tried to get the notes of a user that we don't have")
+    );
+
+    err.message = "No user with that username found";
+    err.code = 404;
+    next(err);
+  }
+};
+
+module.exports = { getNotes, deleteNote, getUserNotes };
