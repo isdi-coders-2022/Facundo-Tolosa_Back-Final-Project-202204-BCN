@@ -119,7 +119,7 @@ describe("Given a DELETE /notes/:id endpoint", () => {
 
 describe("Given a POST /notes/ endpoint", () => {
   describe("When it receives a request with a valid token and note to create", () => {
-    test.only("Then it should respond with a 201 status and the new note created", async () => {
+    test("Then it should respond with a 201 status and the new note created", async () => {
       const title = "Amazing note";
       const category = "notes";
       const content = "content";
@@ -151,6 +151,37 @@ describe("Given a POST /notes/ endpoint", () => {
       expect(noteCreated).toHaveProperty("content", content);
       expect(noteCreated).toHaveProperty("creationDate");
       expect(noteCreated).toHaveProperty("author", usersMock[0].username);
+    });
+  });
+
+  describe("When it receives a request with a valid token and note to create with no title or category", () => {
+    test("Then it should respond with a 400 status and the message 'Validation error'", async () => {
+      const expectedMessage = "Validation error";
+      const content = "content";
+
+      const noteToCreate = {
+        content,
+      };
+
+      const {
+        body: { token },
+      } = await request(app)
+        .post("/user/login")
+        .send({
+          username: usersMock[0].username,
+          password: usersMock[0].password,
+        })
+        .expect(200);
+
+      const {
+        body: { message },
+      } = await request(app)
+        .post(`/notes`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(noteToCreate)
+        .expect(400);
+
+      expect(message).toBe(expectedMessage);
     });
   });
 });
