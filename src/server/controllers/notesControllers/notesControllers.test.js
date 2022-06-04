@@ -1,7 +1,12 @@
 const Note = require("../../../database/models/Note");
 const User = require("../../../database/models/User");
 const { listOfNotesMock } = require("../../../mocks/notesMocks");
-const { getNotes, deleteNote, getUserNotes } = require("./notesControllers");
+const {
+  getNotes,
+  deleteNote,
+  getUserNotes,
+  createNote,
+} = require("./notesControllers");
 
 describe("Given a getNotes controller", () => {
   describe("When it's invoqued with a response", () => {
@@ -103,6 +108,62 @@ describe("Given a getUserNotes controller", () => {
       }));
 
       await getUserNotes(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a createNote controller", () => {
+  const title = "title";
+  const category = "category";
+  const content = "content";
+  const username = "roberto";
+
+  const res = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+
+  const req = {
+    userId: "1974",
+    body: {
+      title,
+      content,
+      category,
+    },
+  };
+  describe("When it's invoqued with a user Id, a title, content and category", () => {
+    test("Then it should call the response's status method with 201 and the new object created", async () => {
+      const expectedObjectCreated = {
+        title,
+        category,
+        content,
+        author: username,
+      };
+
+      User.findOne = jest.fn().mockResolvedValue({ username });
+      Note.create = jest.fn().mockResolvedValue(expectedObjectCreated);
+
+      await createNote(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(expectedObjectCreated);
+    });
+  });
+
+  describe("When it's invoqued with a user Id, a title, content, a category, a next function and the create method fails", () => {
+    test("Then it should call the response's status method with 409 and the new object created", async () => {
+      const next = jest.fn();
+      const expectedError = {
+        message: "Error creating the note",
+        code: 409,
+      };
+
+      User.findOne = jest.fn().mockResolvedValue({ username });
+      Note.create = jest.fn().mockRejectedValue({});
+
+      await createNote(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });

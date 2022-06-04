@@ -57,4 +57,30 @@ const getUserNotes = async (req, res, next) => {
   }
 };
 
-module.exports = { getNotes, deleteNote, getUserNotes };
+const createNote = async (req, res, next) => {
+  const { userId: id } = req;
+  const { title, content, category } = req.body;
+
+  try {
+    const user = await User.findOne({ id });
+
+    const noteToCreate = {
+      title,
+      content,
+      category,
+      author: user.username,
+    };
+
+    const newNote = await Note.create(noteToCreate);
+
+    res.status(201).json(newNote);
+  } catch (err) {
+    debug(chalk.red("Error creating a note"));
+
+    err.message = "Error creating the note";
+    err.code = 409;
+    next(err);
+  }
+};
+
+module.exports = { getNotes, deleteNote, getUserNotes, createNote };
