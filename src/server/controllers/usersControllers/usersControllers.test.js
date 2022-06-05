@@ -1,7 +1,11 @@
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 const User = require("../../../database/models/User");
-const { userMock, userMockPopulated } = require("../../../mocks/usersMocks");
+const {
+  userMock,
+  userMockPopulated,
+  userMockPopulatedWithoutPassword,
+} = require("../../../mocks/usersMocks");
 const { userRegister, userLogin, getUser } = require("./usersControllers");
 
 describe("Given a userRegister function", () => {
@@ -170,7 +174,9 @@ describe("Given a getUser controller", () => {
       await getUser(req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ user: userMockPopulated });
+      expect(res.json).toHaveBeenCalledWith({
+        user: userMockPopulatedWithoutPassword,
+      });
     });
   });
 

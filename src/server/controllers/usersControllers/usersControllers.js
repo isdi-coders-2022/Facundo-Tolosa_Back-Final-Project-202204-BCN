@@ -91,7 +91,15 @@ const getUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ username }).populate("notes", null, Note);
 
-    res.status(200).json({ user });
+    const userWithoutPassword = {
+      username: user.username,
+      name: user.name,
+      image: user.image,
+      notes: user.notes,
+      id: user.id,
+    };
+
+    res.status(200).json({ user: userWithoutPassword });
     debug(chalk.green("Someone asked for a user"));
   } catch (err) {
     debug(chalk.red("Someone tried to get a user that we don't have"));
