@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 const User = require("../../../database/models/User");
-const { userMock } = require("../../../mocks/usersMocks");
-const { userRegister, userLogin } = require("./usersControllers");
+const { userMock, userMockPopulated } = require("../../../mocks/usersMocks");
+const { userRegister, userLogin, getUser } = require("./usersControllers");
 
 describe("Given a userRegister function", () => {
   describe("When it's invoqued with a request with an user that doesn't exist and a response", () => {
@@ -148,6 +148,46 @@ describe("Given a userLogin function", () => {
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 
       await userLogin(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a getUser controller", () => {
+  describe("When it's invoqued with a response and a request with the username to get", () => {
+    test("Then it should call the response's status method with 200 and the json method with the user", async () => {
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const req = { params: { username: "Carlos" } };
+
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockReturnValue(userMockPopulated),
+      }));
+
+      await getUser(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ user: userMockPopulated });
+    });
+  });
+
+  describe("When it's invoqued with a next function and a request with a username that doesn't exist", () => {
+    test("Then it should call the next function with am error", async () => {
+      const req = { params: { username: "Carlosn't" } };
+      const next = jest.fn();
+      const expectedError = {
+        message: "No user with that username found",
+        code: 404,
+      };
+
+      User.findOne = jest.fn(() => ({
+        populate: jest.fn().mockRejectedValue({}),
+      }));
+
+      await getUser(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
