@@ -73,6 +73,13 @@ const createNote = async (req, res, next) => {
 
     const newNote = await Note.create(noteToCreate);
 
+    const newUser = {
+      ...user,
+      notes: user.notes.push(newNote.id),
+    };
+
+    await User.findByIdAndUpdate(user.id, newUser);
+
     res.status(201).json(newNote);
   } catch (err) {
     debug(chalk.red("Error creating a note"));
