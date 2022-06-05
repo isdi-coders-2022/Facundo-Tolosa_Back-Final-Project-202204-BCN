@@ -60,9 +60,8 @@ const getUserNotes = async (req, res, next) => {
 const createNote = async (req, res, next) => {
   const { userId: id } = req;
   const { title, content, category } = req.body;
-
   try {
-    const user = await User.findOne({ id });
+    const user = await User.findById(id);
 
     const noteToCreate = {
       title,

@@ -161,7 +161,7 @@ describe("Given a createNote controller", () => {
         code: 409,
       };
 
-      User.findOne = jest.fn().mockResolvedValue({ username });
+      User.findById = jest.fn().mockResolvedValue({ username });
       Note.create = jest.fn().mockRejectedValue({});
 
       await createNote(req, null, next);
