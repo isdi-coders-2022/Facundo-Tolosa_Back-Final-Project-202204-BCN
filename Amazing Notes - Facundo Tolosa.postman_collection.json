@@ -11,10 +11,19 @@
       "request": {
         "method": "POST",
         "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"username\": \"ernesto1974\", \"password\": \"ernesto\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
-          "raw": "{{origin}}/user/login",
-          "host": ["{{origin}}"],
-          "path": ["user", "login"]
+          "raw": "{{origin}}user/login",
+          "host": ["{{origin}}user"],
+          "path": ["login"]
         }
       },
       "response": []
@@ -24,10 +33,54 @@
       "request": {
         "method": "POST",
         "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
-          "raw": "{{origin}}/user/register",
-          "host": ["{{origin}}"],
-          "path": ["user", "register"]
+          "raw": "{{origin}}user/register",
+          "host": ["{{origin}}user"],
+          "path": ["register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "{{origin}}/user/{{username}}",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTUyZmY4MjY0YmY4YTI3ZDk0YmNiNCIsIm5hbWUiOiJjYXJsb3MiLCJ1c2VybmFtZSI6ImNhcmxvcyIsImltYWdlIjoiIiwiaWF0IjoxNjU0MTU4NDAwfQ.axdh4cftmxZTssLnBsT1a6Lz__FwLPoGUh2QJN30pxA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Best note ever\", \"content\":\"the content of this note is private (?)\", \"category\": \"random\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{origin}}user/{{username}}",
+          "host": ["{{origin}}user"],
+          "path": ["{{username}}"]
         }
       },
       "response": []
@@ -35,12 +88,73 @@
     {
       "name": "{{origin}}/notes",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTUyZmY4MjY0YmY4YTI3ZDk0YmNiNCIsIm5hbWUiOiJjYXJsb3MiLCJ1c2VybmFtZSI6ImNhcmxvcyIsImltYWdlIjoiIiwiaWF0IjoxNjU0MTU4NDAwfQ.axdh4cftmxZTssLnBsT1a6Lz__FwLPoGUh2QJN30pxA",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{origin}}/notes",
+          "raw": "{{origin}}notes",
+          "host": ["{{origin}}notes"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "{{origin}}notes/{{username}}",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "{{origin}}/notes",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOWNmMzA2OTBkMGM0Nzc2MmFjNTEwYiIsIm5hbWUiOiJlcm5lc3RvIiwidXNlcm5hbWUiOiJlcm5lc3RvMTk3NCIsImltYWdlIjoiYWRmYWRnIiwiaWF0IjoxNjU0NDU0MTAwfQ.QvqipRKAGr7P0VRblhVd3770-4zZVnca6xt4SU85lbs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\": \"maripuri\", \"content\": \"marimaripuri\", \"category\": \"maripuri\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{origin}}notes",
+          "host": ["{{origin}}notes"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "{{origin}}/notes/{{idToDelete}}",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{origin}}/notes/{{idToDelete}}",
           "host": ["{{origin}}"],
-          "path": ["notes"]
+          "path": ["notes", "{{idToDelete}}"]
         }
       },
       "response": []
@@ -67,6 +181,15 @@
       "key": "origin",
       "value": "http://localhost:3000/",
       "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "carlos",
+      "type": "string"
+    },
+    {
+      "key": "idToDelete",
+      "value": "id"
     }
   ]
 }
