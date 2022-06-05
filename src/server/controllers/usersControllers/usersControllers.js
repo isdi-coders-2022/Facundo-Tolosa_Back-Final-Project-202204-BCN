@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 const User = require("../../../database/models/User");
 const encryptPassword = require("../../../utils/encryptPassword");
+const Note = require("../../../database/models/Note");
 
 const userRegister = async (req, res, next) => {
   const { name, username, password, image } = req.body;
@@ -84,4 +85,21 @@ const userLogin = async (req, res, next) => {
   res.status(200).json({ token });
 };
 
-module.exports = { userRegister, userLogin };
+const getUser = async (req, res, next) => {
+  const { username } = req.params;
+
+  try {
+    const user = await User.findOne({ username }).populate("notes", null, Note);
+
+    res.status(200).json({ user });
+    debug(chalk.green("Someone asked for a user"));
+  } catch (err) {
+    debug(chalk.red("Someone tried to get a user that we don't have"));
+
+    err.message = "No user with that username found";
+    err.code = 404;
+    next(err);
+  }
+};
+
+module.exports = { userRegister, userLogin, getUser };

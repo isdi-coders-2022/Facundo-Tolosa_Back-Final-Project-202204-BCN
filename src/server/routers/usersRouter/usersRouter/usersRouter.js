@@ -7,7 +7,9 @@ const {
 const {
   userLogin,
   userRegister,
+  getUser,
 } = require("../../../controllers/usersControllers/usersControllers");
+const auth = require("../../../middlewares/auth/auth");
 
 const usersRouter = express.Router();
 
@@ -17,5 +19,6 @@ usersRouter.post(
   userRegister
 );
 usersRouter.post("/login", validate(credentialsLoginSchema), userLogin);
+usersRouter.get("/:username", auth, getUser);
 
 module.exports = usersRouter;
