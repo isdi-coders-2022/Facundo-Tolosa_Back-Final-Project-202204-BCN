@@ -142,8 +142,9 @@ describe("Given a createNote controller", () => {
         author: username,
       };
 
-      User.findOne = jest.fn().mockResolvedValue({ username });
+      User.findOne = jest.fn().mockResolvedValue({ username, notes: [] });
       Note.create = jest.fn().mockResolvedValue(expectedObjectCreated);
+      User.findByIdAndUpdate = jest.fn().mockResolvedValue({});
 
       await createNote(req, res, null);
 
