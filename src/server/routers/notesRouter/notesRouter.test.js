@@ -232,3 +232,57 @@ describe("Given a PUT /notes/ endpoint", () => {
     });
   });
 });
+
+describe("Given a GET /notes/note/:idNote endpoint", () => {
+  describe("When it receives a request with a valid token, an id at the params", () => {
+    test("Then it should respond with a 200 status and the note with that id", async () => {
+      const {
+        body: { token },
+      } = await request(app)
+        .post("/user/login")
+        .send({
+          username: usersMock[0].username,
+          password: usersMock[0].password,
+        })
+        .expect(200);
+
+      const { body: noteCreated } = await request(app)
+        .post(`/notes`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(noteToBeEdited)
+        .expect(201);
+
+      const { body: noteEdited } = await request(app)
+        .get(`/notes/note/${noteCreated.id}`)
+        .set("Authorization", `Bearer ${token}`)
+        .expect(200);
+
+      expect(noteEdited).toHaveProperty("title", noteToBeEdited.title);
+    });
+  });
+
+  describe("When it receives a request with a valid token and id of a note that doesn't exists at the params", () => {
+    test("Then it should respond with a 404 status and the message 'Note not found'", async () => {
+      const expectedMessage = "Note not found";
+
+      const {
+        body: { token },
+      } = await request(app)
+        .post("/user/login")
+        .send({
+          username: usersMock[0].username,
+          password: usersMock[0].password,
+        })
+        .expect(200);
+
+      const {
+        body: { message },
+      } = await request(app)
+        .get(`/notes/note/1974`)
+        .set("Authorization", `Bearer ${token}`)
+        .expect(404);
+
+      expect(message).toBe(expectedMessage);
+    });
+  });
+});
