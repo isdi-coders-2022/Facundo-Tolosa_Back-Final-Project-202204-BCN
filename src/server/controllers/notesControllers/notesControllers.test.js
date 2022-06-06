@@ -6,6 +6,7 @@ const {
   deleteNote,
   getUserNotes,
   createNote,
+  editNote,
 } = require("./notesControllers");
 
 describe("Given a getNotes controller", () => {
@@ -154,7 +155,7 @@ describe("Given a createNote controller", () => {
   });
 
   describe("When it's invoqued with a user Id, a title, content, a category, a next function and the create method fails", () => {
-    test("Then it should call the response's status method with 409 and the new object created", async () => {
+    test("Then it should call the response's status method with 409 and a error message", async () => {
       const next = jest.fn();
       const expectedError = {
         message: "Error creating the note",
@@ -165,6 +166,67 @@ describe("Given a createNote controller", () => {
       Note.create = jest.fn().mockRejectedValue({});
 
       await createNote(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a editNote controller", () => {
+  const title = "title";
+  const category = "category";
+  const content = "content";
+  const username = "carlos90";
+  const noteId = "1974";
+
+  const res = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+
+  const req = {
+    params: { noteId },
+    body: {
+      title,
+      content,
+      category,
+    },
+  };
+  describe("When it's invoqued with a title, content, category and a id of the note to edit", () => {
+    test("Then it should call the response's status method with 200 and the new object edited", async () => {
+      const noteToEdit = {
+        author: username,
+      };
+
+      const newNote = {
+        title,
+        category,
+        content,
+        author: username,
+      };
+
+      Note.findById = jest.fn().mockResolvedValue(noteToEdit);
+      Note.findByIdAndUpdate = jest.fn().mockResolvedValue({});
+      Note.findById = jest.fn().mockResolvedValue(newNote);
+
+      await editNote(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(newNote);
+    });
+  });
+
+  describe("When it's invoqued with a id of a note that doesn't exists", () => {
+    test("Then it should call the response's status method with 400 and the message 'Error editing note'", async () => {
+      const expectedError = {
+        message: "Error editing note",
+        code: 400,
+      };
+      const next = jest.fn();
+
+      Note.findById = jest.fn().mockRejectedValue({});
+
+      await editNote(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
