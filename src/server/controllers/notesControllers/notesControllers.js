@@ -92,6 +92,7 @@ const createNote = async (req, res, next) => {
 const editNote = async (req, res, next) => {
   const { noteId } = req.params;
   const { title, content, category } = req.body;
+
   try {
     const noteToEdit = await Note.findById(noteId);
 

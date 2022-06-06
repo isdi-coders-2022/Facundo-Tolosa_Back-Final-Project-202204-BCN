@@ -6,7 +6,10 @@ const User = require("../../../database/models/User");
 const Note = require("../../../database/models/Note");
 const { usersMock } = require("../../../mocks/usersMocks");
 const app = require("../..");
-const { listOfNotesMock } = require("../../../mocks/notesMocks");
+const {
+  listOfNotesMock,
+  noteToBeEdited,
+} = require("../../../mocks/notesMocks");
 
 let mongoServer;
 
@@ -182,6 +185,50 @@ describe("Given a POST /notes/ endpoint", () => {
         .expect(400);
 
       expect(message).toBe(expectedMessage);
+    });
+  });
+});
+
+describe("Given a PUT /notes/ endpoint", () => {
+  describe("When it receives a request with a valid token, an id to edit and a note", () => {
+    test("Then it should respond with a 200 status and the note edited", async () => {
+      const titleEdited = "Edited note";
+      const categoryEdited = "Category 1";
+      const contentEdited = "Content of the edited note";
+
+      const changesToMake = {
+        title: titleEdited,
+        category: categoryEdited,
+        content: contentEdited,
+      };
+
+      const {
+        body: { token },
+      } = await request(app)
+        .post("/user/login")
+        .send({
+          username: usersMock[0].username,
+          password: usersMock[0].password,
+        })
+        .expect(200);
+
+      const { body: noteCreated } = await request(app)
+        .post(`/notes`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(noteToBeEdited)
+        .expect(201);
+
+      const { body: noteEdited } = await request(app)
+        .put(`/notes/${noteCreated.id}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(changesToMake)
+        .expect(200);
+
+      expect(noteEdited).toHaveProperty("title", titleEdited);
+      expect(noteEdited).toHaveProperty("category", categoryEdited);
+      expect(noteEdited).toHaveProperty("content", contentEdited);
+      expect(noteEdited).toHaveProperty("creationDate");
+      expect(noteEdited).toHaveProperty("author", usersMock[0].username);
     });
   });
 });
