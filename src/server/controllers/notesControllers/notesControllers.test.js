@@ -7,6 +7,7 @@ const {
   getUserNotes,
   createNote,
   editNote,
+  getNote,
 } = require("./notesControllers");
 
 describe("Given a getNotes controller", () => {
@@ -229,6 +230,40 @@ describe("Given a editNote controller", () => {
       await editNote(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a getNote controller", () => {
+  const req = {
+    params: { idNote: "1974" },
+  };
+  describe("When it's invoqued with a response and a id of a note to find", () => {
+    test("Then it should call the response's status method with 200 and the json method with a note", async () => {
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      Note.findById = jest.fn().mockResolvedValue(listOfNotesMock[0]);
+
+      await getNote(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(listOfNotesMock[0]);
+    });
+  });
+
+  describe("When it's invoqued with next function and an id of a note that doesn't exists", () => {
+    test("Then it should call next with an 404 error and the message: 'Error getting all the notes'", async () => {
+      const next = jest.fn();
+      const err = { code: 404, message: "Note not found" };
+
+      Note.findById = jest.fn().mockRejectedValue({});
+
+      await getNote(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(err);
     });
   });
 });

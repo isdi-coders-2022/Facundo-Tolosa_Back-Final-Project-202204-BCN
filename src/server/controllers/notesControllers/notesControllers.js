@@ -17,6 +17,21 @@ const getNotes = async (req, res, next) => {
   }
 };
 
+const getNote = async (req, res, next) => {
+  const { idNote } = req.params;
+  try {
+    const note = await Note.findById(idNote);
+    debug(chalk.green("Someone asked for a specific note"));
+
+    res.status(200).json(note);
+  } catch (err) {
+    err.message = "Note not found";
+    err.code = 404;
+
+    next(err);
+  }
+};
+
 const deleteNote = async (req, res, next) => {
   const { idNote } = req.params;
 
@@ -117,4 +132,11 @@ const editNote = async (req, res, next) => {
   }
 };
 
-module.exports = { getNotes, deleteNote, getUserNotes, createNote, editNote };
+module.exports = {
+  getNotes,
+  getNote,
+  deleteNote,
+  getUserNotes,
+  createNote,
+  editNote,
+};
