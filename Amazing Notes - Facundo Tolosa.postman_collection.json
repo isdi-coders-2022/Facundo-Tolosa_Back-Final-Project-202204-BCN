@@ -116,6 +116,29 @@
       "response": []
     },
     {
+      "name": "{{origin}}notes/{{noteId}}",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTg4OWEwOWY3MWFlMzhhNWFiOWVjNiIsIm5hbWUiOiJjYXJsb3MiLCJ1c2VybmFtZSI6ImNhcmxvcyIsImltYWdlIjoiY2FybGl0b3MuanBnIiwiaWF0IjoxNjU0NTA0MTQ2fQ.iiyGn14OAscnddPW7yDo2AFUDCSvgf8SbXItToxK4Pc",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{origin}}notes/note/{{noteId}}",
+          "host": ["{{origin}}notes"],
+          "path": ["note", "{{noteId}}"]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "{{origin}}/notes",
       "request": {
         "auth": {
@@ -158,6 +181,38 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "{{origin}}notes/{{noteId}}",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTg4OWEwOWY3MWFlMzhhNWFiOWVjNiIsIm5hbWUiOiJjYXJsb3MiLCJ1c2VybmFtZSI6ImNhcmxvcyIsImltYWdlIjoiY2FybGl0b3MuanBnIiwiaWF0IjoxNjU0NTA0MTQ2fQ.iiyGn14OAscnddPW7yDo2AFUDCSvgf8SbXItToxK4Pc",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\": \"Edited\", \"content\": \"This was edited with postman (*noise like the one with thunks*)\", \"category\": \"Category 0\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{origin}}notes/{{noteId}}",
+          "host": ["{{origin}}notes"],
+          "path": ["{{noteId}}"]
+        }
+      },
+      "response": []
     }
   ],
   "event": [
@@ -190,6 +245,10 @@
     {
       "key": "idToDelete",
       "value": "id"
+    },
+    {
+      "key": "noteId",
+      "value": "629cf2e590d0c47762ac5106"
     }
   ]
 }
