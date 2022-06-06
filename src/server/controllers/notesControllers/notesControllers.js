@@ -89,4 +89,31 @@ const createNote = async (req, res, next) => {
   }
 };
 
-module.exports = { getNotes, deleteNote, getUserNotes, createNote };
+const editNote = async (req, res, next) => {
+  const { noteId } = req.params;
+  const { title, content, category } = req.body;
+  try {
+    const noteToEdit = await Note.findById(noteId);
+
+    const noteEdited = {
+      title,
+      content,
+      category,
+      author: noteToEdit.author,
+    };
+
+    await Note.findByIdAndUpdate(noteId, noteEdited);
+    const newNote = await Note.findById(noteId);
+
+    debug(chalk.green("Someone asked to edit a note"));
+    res.status(200).json(newNote);
+  } catch (err) {
+    debug(chalk.red("Someone asked to edit a note that we don't have"));
+
+    err.message = "Error editing note";
+    err.code = 400;
+    next(err);
+  }
+};
+
+module.exports = { getNotes, deleteNote, getUserNotes, createNote, editNote };

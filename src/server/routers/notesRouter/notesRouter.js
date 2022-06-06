@@ -6,6 +6,7 @@ const {
   deleteNote,
   getUserNotes,
   createNote,
+  editNote,
 } = require("../../controllers/notesControllers/notesControllers");
 
 const notesRouter = express.Router();
@@ -14,5 +15,6 @@ notesRouter.get("/", getNotes);
 notesRouter.get("/:username", getUserNotes);
 notesRouter.delete("/:idNote", deleteNote);
 notesRouter.post("/", validate(noteSchema), createNote);
+notesRouter.put("/:noteId", validate(noteSchema), editNote);
 
 module.exports = notesRouter;
