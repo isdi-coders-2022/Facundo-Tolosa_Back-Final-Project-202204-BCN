@@ -12,6 +12,14 @@ const listOfNotesMock = [
     author: "vitorbraz90",
   },
 ];
+
+const noteToBeEdited = {
+  title: "fuchibol notes",
+  content: "amazing goals of ronaldinho and pele",
+  category: "sports",
+};
+
 module.exports = {
   listOfNotesMock,
+  noteToBeEdited,
 };
