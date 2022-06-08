@@ -22,6 +22,11 @@ const UserSchema = new Schema({
     default: "",
   },
 
+  imageBackup: {
+    type: String,
+    default: "",
+  },
+
   notes: {
     type: [{ type: SchemaTypes.ObjectId, ref: "Note" }],
     default: [],

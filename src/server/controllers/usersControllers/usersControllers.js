@@ -7,7 +7,8 @@ const encryptPassword = require("../../../utils/encryptPassword");
 const Note = require("../../../database/models/Note");
 
 const userRegister = async (req, res, next) => {
-  const { name, username, password, image } = req.body;
+  const { name, username, password } = req.body;
+  const { img, imgBackup } = req;
 
   const user = await User.findOne({ username });
   if (user) {
@@ -26,7 +27,8 @@ const userRegister = async (req, res, next) => {
       username,
       password: encryptedPassword,
       name,
-      image,
+      image: img,
+      imageBackup: imgBackup,
     });
 
     debug(chalk.greenBright("User created"));
@@ -35,6 +37,7 @@ const userRegister = async (req, res, next) => {
       username: newUser.username,
       name: newUser.name,
       image: newUser.image,
+      imageBackup: newUser.imageBackup,
       notes: newUser.notes,
       id: newUser.id,
     };

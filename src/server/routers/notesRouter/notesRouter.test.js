@@ -13,6 +13,13 @@ const {
 
 let mongoServer;
 
+jest.mock("firebase/storage", () => ({
+  ref: jest.fn().mockReturnValue("avatarRef"),
+  uploadBytes: jest.fn().mockResolvedValue(),
+  getStorage: jest.fn(),
+  getDownloadURL: jest.fn().mockResolvedValue("url"),
+}));
+
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   await connectDB(mongoServer.getUri());
@@ -24,8 +31,29 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await request(app).post("/user/register").send(usersMock[0]).expect(201);
-  await request(app).post("/user/register").send(usersMock[1]).expect(201);
+  await request(app)
+    .post("/user/register")
+    .type("multipart/formd-ata")
+    .field("username", "carlos")
+    .field("password", "carlos")
+    .field("name", "carlos")
+    .attach("image", Buffer.from("mockImageString", "utf-8"), {
+      filename: "mockiamge",
+      originalname: "image.jpg",
+    })
+    .expect(201);
+
+  await request(app)
+    .post("/user/register")
+    .type("multipart/formd-ata")
+    .field("username", "ernesto")
+    .field("password", "ernesto")
+    .field("name", "ernesto")
+    .attach("image", Buffer.from("mockImageString", "utf-8"), {
+      filename: "mockiamge",
+      originalname: "image.jpg",
+    })
+    .expect(201);
 });
 
 afterEach(async () => {

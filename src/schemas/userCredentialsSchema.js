@@ -14,10 +14,7 @@ const credentialsRegisterSchema = {
       .max(20)
       .messages({ message: "A password is required" })
       .required(),
-    image: Joi.string()
-      .max(100)
-      .messages({ message: "A image is required" })
-      .required(),
+    image: Joi.string().allow(null, ""),
   }),
 };
 
