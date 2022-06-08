@@ -1,4 +1,3 @@
-require("dotenv").config();
 const {
   getStorage,
   ref,
@@ -9,7 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const { initializeApp } = require("firebase/app");
 
-const uploadFirebase = (req, res, next) => {
+const uploadFirebase = async (req, res, next) => {
   const { file } = req;
 
   const firebaseConfig = {
@@ -26,12 +25,13 @@ const uploadFirebase = (req, res, next) => {
   const newImageName = file ? `${Date.now()}${file.originalname}` : "";
 
   if (file) {
-    fs.rename(
+    await fs.rename(
       path.join("uploads", "images", file.filename),
       path.join("uploads", "images", newImageName),
       async (error) => {
         if (error) {
           next(error);
+          return;
         }
 
         fs.readFile(
@@ -52,12 +52,15 @@ const uploadFirebase = (req, res, next) => {
 
             req.imgBackup = firebaseImageURL;
             req.img = path.join("images", newImageName);
-
-            next();
           }
         );
       }
     );
+    next();
+  } else {
+    req.imgBackup = "";
+    req.img = "";
+    next();
   }
 };
 
