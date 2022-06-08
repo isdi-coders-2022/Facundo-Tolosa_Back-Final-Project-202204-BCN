@@ -34,7 +34,7 @@ const uploadFirebase = async (req, res, next) => {
           return;
         }
 
-        fs.readFile(
+        await fs.readFile(
           path.join("uploads", "images", newImageName),
           async (readError, readFile) => {
             if (readError) {
@@ -52,11 +52,12 @@ const uploadFirebase = async (req, res, next) => {
 
             req.imgBackup = firebaseImageURL;
             req.img = path.join("images", newImageName);
+
+            next();
           }
         );
       }
     );
-    next();
   } else {
     req.imgBackup = "";
     req.img = "";

@@ -10,6 +10,13 @@ const {
 const connectDB = require("../../../../database");
 const User = require("../../../../database/models/User");
 
+jest.mock("firebase/storage", () => ({
+  ref: jest.fn().mockReturnValue("thing"),
+  uploadBytes: jest.fn().mockResolvedValue(),
+  getStorage: jest.fn(),
+  getDownloadURL: jest.fn().mockResolvedValue("url"),
+}));
+
 let mongoServer;
 
 beforeAll(async () => {

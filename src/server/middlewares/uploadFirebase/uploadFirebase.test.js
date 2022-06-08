@@ -10,31 +10,6 @@ jest.mock("firebase/storage", () => ({
 }));
 
 describe("Given a uploadFirebase middleware", () => {
-  describe("When it receives a request with a file", () => {
-    test("Then it should call the received next function", async () => {
-      const req = { file: { filename: "file" } };
-
-      jest
-        .spyOn(path, "join")
-        .mockReturnValue(`${path.join("uploads", "images")}`);
-
-      jest
-        .spyOn(fs, "rename")
-        .mockImplementation((oldpath, newpath, callback) => {
-          callback();
-        });
-
-      jest.spyOn(fs, "readFile").mockImplementation((pathToRead, callback) => {
-        callback();
-      });
-
-      const next = jest.fn();
-      await uploadFirebase(req, null, next);
-
-      expect(next).toHaveBeenCalled();
-    });
-  });
-
   describe("When it receives a request without a file", () => {
     test("Then it should call the received next function", async () => {
       const req = { file: null };
@@ -46,8 +21,8 @@ describe("Given a uploadFirebase middleware", () => {
     });
   });
 
-  describe("When it receives a request with a file", () => {
-    test("Then it should call the received next function", async () => {
+  describe("When the rename method fails", () => {
+    test("Then it should call the received next function with the error 'renameError'", async () => {
       const req = { file: { filename: "file" } };
 
       jest
@@ -57,18 +32,18 @@ describe("Given a uploadFirebase middleware", () => {
       jest
         .spyOn(fs, "rename")
         .mockImplementation((oldpath, newpath, callback) => {
-          callback("error");
+          callback("renameError");
         });
 
       const next = jest.fn();
       await uploadFirebase(req, null, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith("renameError");
     });
   });
 
-  describe("When it receives a request with a file", () => {
-    test.only("Then it should call the received next function", async () => {
+  describe("When the readFile method files", () => {
+    test("Then it should call the received next function with the error 'readFileError'", async () => {
       const req = { file: { filename: "file" } };
 
       jest
