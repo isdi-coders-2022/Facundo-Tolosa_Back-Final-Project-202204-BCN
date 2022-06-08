@@ -23,8 +23,29 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await request(app).post("/user/register").send(usersMock[0]).expect(201);
-  await request(app).post("/user/register").send(usersMock[1]).expect(201);
+  await request(app)
+    .post("/user/register")
+    .type("multipart/formd-ata")
+    .field("username", "carlos")
+    .field("password", "carlos")
+    .field("name", "carlos")
+    .attach("image", Buffer.from("mockImageString", "utf-8"), {
+      filename: "mockiamge",
+      originalname: "image.jpg",
+    })
+    .expect(201);
+
+  await request(app)
+    .post("/user/register")
+    .type("multipart/formd-ata")
+    .field("username", "ernesto")
+    .field("password", "ernesto")
+    .field("name", "ernesto")
+    .attach("image", Buffer.from("mockImageString", "utf-8"), {
+      filename: "mockiamge",
+      originalname: "image.jpg",
+    })
+    .expect(201);
 });
 
 afterEach(async () => {
@@ -36,7 +57,14 @@ describe("Given a POST /user/register endpoint", () => {
     test("Then it should respond with a 201 status and the new user created", async () => {
       const { body } = await request(app)
         .post("/user/register")
-        .send(userMock)
+        .type("multipart/formd-ata")
+        .field("username", userMock.username)
+        .field("password", userMock.password)
+        .field("name", userMock.name)
+        .attach("image", Buffer.from("mockImageString", "utf-8"), {
+          filename: "mockiamge",
+          originalname: "image.jpg",
+        })
         .expect(201);
 
       expect(body).toHaveProperty("name", userMock.name);
@@ -49,7 +77,14 @@ describe("Given a POST /user/register endpoint", () => {
 
       const { body } = await request(app)
         .post("/user/register")
-        .send(usersMock[0])
+        .type("multipart/formd-ata")
+        .field("username", usersMock[0].username)
+        .field("password", usersMock[0].password)
+        .field("name", usersMock[0].name)
+        .attach("image", Buffer.from("mockImageString", "utf-8"), {
+          filename: "mockiamge",
+          originalname: "image.jpg",
+        })
         .expect(409);
 
       expect(body).toEqual(expectedMessage);
@@ -74,7 +109,17 @@ describe("Given a POST /user/register endpoint", () => {
 describe("Given a POST /user/login endpoint", () => {
   describe("When it receives a request with a registered user", () => {
     test("Then it should respond with a 200 status and a token", async () => {
-      await request(app).post("/user/register").send(userMock).expect(201);
+      await request(app)
+        .post("/user/register")
+        .type("multipart/formd-ata")
+        .field("username", userMock.username)
+        .field("password", userMock.password)
+        .field("name", userMock.name)
+        .attach("image", Buffer.from("mockImageString", "utf-8"), {
+          filename: "mockiamge",
+          originalname: "image.jpg",
+        })
+        .expect(201);
 
       const { body } = await request(app)
         .post("/user/login")

@@ -28,6 +28,7 @@ const userRegister = async (req, res, next) => {
       password: encryptedPassword,
       name,
       image: img,
+      imageBackup: imgBackup,
     });
 
     debug(chalk.greenBright("User created"));
@@ -36,6 +37,7 @@ const userRegister = async (req, res, next) => {
       username: newUser.username,
       name: newUser.name,
       image: newUser.image,
+      imageBackup: newUser.imageBackup,
       notes: newUser.notes,
       id: newUser.id,
     };

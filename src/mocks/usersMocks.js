@@ -15,13 +15,11 @@ const usersMock = [
     username: "carlos",
     password: "carlos",
     name: "carlos",
-    image: "image",
   },
   {
     username: "ernesto",
     password: "ernesto",
     name: "ernesto",
-    image: "image",
   },
 ];
 
