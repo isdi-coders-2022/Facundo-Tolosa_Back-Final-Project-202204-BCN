@@ -98,6 +98,7 @@ const getUser = async (req, res, next) => {
       username: user.username,
       name: user.name,
       image: user.image,
+      imageBackup: user.imageBackup,
       notes: user.notes,
       id: user.id,
     };
