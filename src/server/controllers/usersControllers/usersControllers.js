@@ -1,6 +1,7 @@
 const debug = require("debug")("amazingN:server:controllers:userControllers");
 const chalk = require("chalk");
 const bcrypt = require("bcrypt");
+const { default: axios } = require("axios");
 const jsonwebtoken = require("jsonwebtoken");
 const User = require("../../../database/models/User");
 const encryptPassword = require("../../../utils/encryptPassword");
@@ -90,9 +91,11 @@ const userLogin = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   const { username } = req.params;
+  const id = req.userId;
 
   try {
     const user = await User.findOne({ username }).populate("notes", null, Note);
+    const activeUser = await User.findById(id);
 
     const userWithoutPassword = {
       username: user.username,
@@ -102,6 +105,26 @@ const getUser = async (req, res, next) => {
       notes: user.notes,
       id: user.id,
     };
+
+    if (user.fcmToken) {
+      await axios.post(
+        "https://fcm.googleapis.com//v1/projects/amazing-notes-fe460/messages:send",
+        {
+          message: {
+            token: `${user.fcmToken}`,
+            notification: {
+              title: "¡Your notes are amazing!",
+              body: `${activeUser.username} is watching your profile`,
+            },
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ya29.a0ARrdaM8vb425StXV9tXgMZGrpOS42IW6R71mwrckgSbtQZcBu3Ixz2SHlBx_LrcDlx2mo_XWrLO9XggRuHx_Af3h3ZisToZ25l6dDl_Xz9xAC0RE_K3b--4uLJBEVIPY6IEZ2aPiZ1sce75sVGJi0NDQXAi4`,
+          },
+        }
+      );
+    }
 
     res.status(200).json({ user: userWithoutPassword });
     debug(chalk.green("Someone asked for a user"));
@@ -114,4 +137,21 @@ const getUser = async (req, res, next) => {
   }
 };
 
-module.exports = { userRegister, userLogin, getUser };
+const setFcmToken = async (req, res, next) => {
+  const { userId } = req;
+  const { fcmToken } = req.body;
+
+  try {
+    await User.findByIdAndUpdate(userId, { fcmToken });
+
+    res.status(200).json({});
+  } catch (err) {
+    debug(chalk.red("Error editing fcm token"));
+
+    err.message = "Error editing fcm token";
+    err.code = 400;
+    next(err);
+  }
+};
+
+module.exports = { userRegister, userLogin, getUser, setFcmToken };

@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 const User = require("../../../database/models/User");
@@ -6,7 +7,12 @@ const {
   userMockPopulated,
   userMockPopulatedWithoutPassword,
 } = require("../../../mocks/usersMocks");
-const { userRegister, userLogin, getUser } = require("./usersControllers");
+const {
+  userRegister,
+  userLogin,
+  getUser,
+  setFcmToken,
+} = require("./usersControllers");
 
 describe("Given a userRegister function", () => {
   describe("When it's invoqued with a request with an user that doesn't exist and a response", () => {
@@ -171,6 +177,33 @@ describe("Given a getUser controller", () => {
         populate: jest.fn().mockReturnValue(userMockPopulated),
       }));
 
+      axios.post = jest.fn().mockResolvedValue({});
+
+      await getUser(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        user: userMockPopulatedWithoutPassword,
+      });
+    });
+  });
+
+  describe("When it's invoqued with a response and a request with the username to get buth without fcmToken", () => {
+    test("Then it should call the response's status method with 200 and the json method with the user", async () => {
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const req = { params: { username: "Carlos" } };
+
+      User.findOne = jest.fn(() => ({
+        populate: jest
+          .fn()
+          .mockReturnValue({ ...userMockPopulated, fcmToken: "" }),
+      }));
+
+      axios.post = jest.fn().mockResolvedValue({});
+
       await getUser(req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(200);
@@ -194,6 +227,41 @@ describe("Given a getUser controller", () => {
       }));
 
       await getUser(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a setFcmToken controller", () => {
+  describe("When it's invoqued with a userId and a fcmToken", () => {
+    test("Then it should call the response's status method with 200", async () => {
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const req = { userId: "1974", body: { fcmToken: "12345" } };
+
+      User.findByIdAndUpdate = jest.fn().mockResolvedValue({});
+
+      await setFcmToken(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+  });
+
+  describe("When it's invoqued with a userId and a fcmToken and there aren't any user with that id", () => {
+    test("Then it should call the response's status method with 400", async () => {
+      const next = jest.fn();
+      const req = { userId: "1000", body: { fcmToken: "12345" } };
+      const expectedError = {
+        message: "Error editing fcm token",
+        code: 400,
+      };
+
+      User.findByIdAndUpdate = jest.fn().mockRejectedValue({});
+
+      await setFcmToken(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
