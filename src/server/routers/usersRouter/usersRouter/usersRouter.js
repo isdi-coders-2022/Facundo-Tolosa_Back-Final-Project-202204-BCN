@@ -10,6 +10,7 @@ const {
   userLogin,
   userRegister,
   getUser,
+  setFcmToken,
 } = require("../../../controllers/usersControllers/usersControllers");
 const auth = require("../../../middlewares/auth/auth");
 const uploadFirebase = require("../../../middlewares/uploadFirebase/uploadFirebase");
@@ -32,5 +33,6 @@ usersRouter.post(
 );
 usersRouter.post("/login", validate(credentialsLoginSchema), userLogin);
 usersRouter.get("/:username", auth, getUser);
+usersRouter.post("/token", auth, setFcmToken);
 
 module.exports = usersRouter;

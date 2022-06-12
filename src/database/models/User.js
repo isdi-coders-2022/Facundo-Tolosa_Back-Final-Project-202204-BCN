@@ -27,6 +27,11 @@ const UserSchema = new Schema({
     default: "",
   },
 
+  fcmToken: {
+    type: String,
+    default: "",
+  },
+
   notes: {
     type: [{ type: SchemaTypes.ObjectId, ref: "Note" }],
     default: [],

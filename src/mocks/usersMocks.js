@@ -46,6 +46,7 @@ const userMockPopulated = {
       id: "629c6e290da6fac3a0c0cda9",
     },
   ],
+  fcmToken: "1974",
   id: "629889a09f71ae38a5ab9ec6",
 };
 
