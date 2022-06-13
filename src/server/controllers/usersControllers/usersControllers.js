@@ -120,7 +120,7 @@ const getUser = async (req, res, next) => {
         },
         {
           headers: {
-            Authorization: `Bearer ya29.a0ARrdaM8vb425StXV9tXgMZGrpOS42IW6R71mwrckgSbtQZcBu3Ixz2SHlBx_LrcDlx2mo_XWrLO9XggRuHx_Af3h3ZisToZ25l6dDl_Xz9xAC0RE_K3b--4uLJBEVIPY6IEZ2aPiZ1sce75sVGJi0NDQXAi4`,
+            Authorization: `Bearer ya29.a0ARrdaM9JEllz4MsH-aXJROZX5ptBy8_SOcRiAJhO0eathBjyBtsdy8542k-3f1EM6IjKSyLBHZHHGL_bYHXP4JteiZELIi7s418db0V5CObmdhFSzLpGfduBJudLqg8L9F1sPnJEngdLWeVPmQGw7mMrT1wt`,
           },
         }
       );
