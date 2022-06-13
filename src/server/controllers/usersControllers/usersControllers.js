@@ -106,25 +106,25 @@ const getUser = async (req, res, next) => {
       id: user.id,
     };
 
-    if (user.fcmToken) {
-      await axios.post(
-        "https://fcm.googleapis.com//v1/projects/amazing-notes-fe460/messages:send",
-        {
-          message: {
-            token: `${user.fcmToken}`,
-            notification: {
-              title: "¡Your notes are amazing!",
-              body: `${activeUser.username} is watching your profile`,
-            },
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ya29.a0ARrdaM8vb425StXV9tXgMZGrpOS42IW6R71mwrckgSbtQZcBu3Ixz2SHlBx_LrcDlx2mo_XWrLO9XggRuHx_Af3h3ZisToZ25l6dDl_Xz9xAC0RE_K3b--4uLJBEVIPY6IEZ2aPiZ1sce75sVGJi0NDQXAi4`,
-          },
-        }
-      );
-    }
+    // if (user.fcmToken) {
+    //   await axios.post(
+    //     "https://fcm.googleapis.com//v1/projects/amazing-notes-fe460/messages:send",
+    //     {
+    //       message: {
+    //         token: `${user.fcmToken}`,
+    //         notification: {
+    //           title: "¡Your notes are amazing!",
+    //           body: `${activeUser.username} is watching your profile`,
+    //         },
+    //       },
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ya29.a0ARrdaM9JEllz4MsH-aXJROZX5ptBy8_SOcRiAJhO0eathBjyBtsdy8542k-3f1EM6IjKSyLBHZHHGL_bYHXP4JteiZELIi7s418db0V5CObmdhFSzLpGfduBJudLqg8L9F1sPnJEngdLWeVPmQGw7mMrT1wt`,
+    //       },
+    //     }
+    //   );
+    // }
 
     res.status(200).json({ user: userWithoutPassword });
     debug(chalk.green("Someone asked for a user"));
