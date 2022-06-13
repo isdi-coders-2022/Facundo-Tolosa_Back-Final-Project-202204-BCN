@@ -33,6 +33,7 @@
     "express": "^4.17.3",
     "express-validation": "^4.1.0",
     "firebase": "^9.8.2",
+    "google-auth-library": "^8.0.2",
     "helmet": "^5.0.2",
     "jest": "^27.5.1",
     "jsonwebtoken": "^8.5.1",
