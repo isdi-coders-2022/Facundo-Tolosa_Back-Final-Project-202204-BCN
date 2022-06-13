@@ -1,7 +1,6 @@
 const debug = require("debug")("amazingN:server:controllers:userControllers");
 const chalk = require("chalk");
 const bcrypt = require("bcrypt");
-const { default: axios } = require("axios");
 const jsonwebtoken = require("jsonwebtoken");
 const User = require("../../../database/models/User");
 const encryptPassword = require("../../../utils/encryptPassword");
@@ -91,11 +90,11 @@ const userLogin = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   const { username } = req.params;
-  const id = req.userId;
+  // const id = req.userId;
 
   try {
     const user = await User.findOne({ username }).populate("notes", null, Note);
-    const activeUser = await User.findById(id);
+    // const activeUser = await User.findById(id);
 
     const userWithoutPassword = {
       username: user.username,
