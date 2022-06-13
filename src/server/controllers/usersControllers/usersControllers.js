@@ -106,6 +106,7 @@ const getUser = async (req, res, next) => {
       id: user.id,
     };
 
+
     // if (user.fcmToken) {
     //   await axios.post(
     //     "https://fcm.googleapis.com//v1/projects/amazing-notes-fe460/messages:send",
@@ -125,6 +126,7 @@ const getUser = async (req, res, next) => {
     //     }
     //   );
     // }
+
 
     res.status(200).json({ user: userWithoutPassword });
     debug(chalk.green("Someone asked for a user"));
