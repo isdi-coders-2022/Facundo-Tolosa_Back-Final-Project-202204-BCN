@@ -1,6 +1,7 @@
 const { default: axios } = require("axios");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
+const Note = require("../../../database/models/Note");
 const User = require("../../../database/models/User");
 const {
   userMock,
@@ -177,6 +178,8 @@ describe("Given a getUser controller", () => {
         populate: jest.fn().mockReturnValue(userMockPopulated),
       }));
 
+      Note.findById = jest.fn().mockReturnValue({ content: "" });
+
       axios.post = jest.fn().mockResolvedValue({});
 
       await getUser(req, res, null);
@@ -201,7 +204,7 @@ describe("Given a getUser controller", () => {
           .fn()
           .mockReturnValue({ ...userMockPopulated, fcmToken: "" }),
       }));
-
+      Note.findById = jest.fn().mockReturnValue({ content: "" });
       axios.post = jest.fn().mockResolvedValue({});
 
       await getUser(req, res, null);
