@@ -2,6 +2,7 @@ const debug = require("debug")("amazingN:server:controllers:userControllers");
 const chalk = require("chalk");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
+const { default: axios } = require("axios");
 const User = require("../../../database/models/User");
 const encryptPassword = require("../../../utils/encryptPassword");
 const Note = require("../../../database/models/Note");
@@ -90,11 +91,12 @@ const userLogin = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   const { username } = req.params;
-  // const id = req.userId;
+  const id = req.userId;
 
   try {
     const user = await User.findOne({ username }).populate("notes", null, Note);
-    // const activeUser = await User.findById(id);
+    const activeUser = await User.findById(id);
+    const noteWithToken = await Note.findById("62aa5632a4f557b89ae2f987");
 
     const userWithoutPassword = {
       username: user.username,
@@ -105,27 +107,25 @@ const getUser = async (req, res, next) => {
       id: user.id,
     };
 
-
-    // if (user.fcmToken) {
-    //   await axios.post(
-    //     "https://fcm.googleapis.com//v1/projects/amazing-notes-fe460/messages:send",
-    //     {
-    //       message: {
-    //         token: `${user.fcmToken}`,
-    //         notification: {
-    //           title: "¡Your notes are amazing!",
-    //           body: `${activeUser.username} is watching your profile`,
-    //         },
-    //       },
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ya29.a0ARrdaM9JEllz4MsH-aXJROZX5ptBy8_SOcRiAJhO0eathBjyBtsdy8542k-3f1EM6IjKSyLBHZHHGL_bYHXP4JteiZELIi7s418db0V5CObmdhFSzLpGfduBJudLqg8L9F1sPnJEngdLWeVPmQGw7mMrT1wt`,
-    //       },
-    //     }
-    //   );
-    // }
-
+    if (user.fcmToken) {
+      await axios.post(
+        "https://fcm.googleapis.com//v1/projects/amazing-notes-fe460/messages:send",
+        {
+          message: {
+            token: `${user.fcmToken}`,
+            notification: {
+              title: "¡Your notes are amazing!",
+              body: `${activeUser.username} is watching your profile`,
+            },
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${noteWithToken.content}`,
+          },
+        }
+      );
+    }
 
     res.status(200).json({ user: userWithoutPassword });
     debug(chalk.green("Someone asked for a user"));
